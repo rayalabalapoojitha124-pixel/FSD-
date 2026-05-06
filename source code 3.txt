@@ -1,0 +1,64 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import EventPage from "./pages/EventPage";
+import PaymentPage from "./pages/PaymentPage";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* 👤 USER */}
+        <Route path="/" element={<Home />} />
+        <Route path="/event/:id" element={<EventPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+
+        {/* 🧑‍💻 ADMIN */}
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(to right, #141e30, #243b55);
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  width: 220px;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  margin: 15px;
+  padding: 10px;
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  height: 250px;
+  border-radius: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
