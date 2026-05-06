@@ -1,0 +1,50 @@
+<?php
+$conn = new mysqli("localhost", "root", "", "studentdb", 3308);
+
+if(isset($_POST['submit'])){
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $dob = $_POST['dob'];
+    $dept = $_POST['dept'];
+    $phone = $_POST['phone'];
+
+    $sql = "INSERT INTO students(name,email,dob,dept,phone)
+            VALUES('$name','$email','$dob','$dept','$phone')";
+    $conn->query($sql);
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<body>
+    <head>
+        <link rel="stylesheet" href="style.css">
+
+
+<h2>Student Registration</h2>
+
+<form method="post">
+Name: <input type="text" name="name"><br><br>
+Email: <input type="email" name="email"><br><br>
+DOB: <input type="date" name="dob"><br><br>
+Dept: <input type="text" name="dept"><br><br>
+Phone: <input type="text" name="phone"><br><br>
+
+<button type="submit" name="submit">Submit</button>
+</form>
+
+<hr>
+
+<h3>Student Data</h3>
+
+<?php
+$result = $conn->query("SELECT * FROM students");
+
+while($row = $result->fetch_assoc()){
+    echo $row['name']." - ".$row['email']."<br>";
+}
+?>
+
+</body>
+</html>
+</head>
