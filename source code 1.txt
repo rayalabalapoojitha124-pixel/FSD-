@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Ticket Booking</title>
+
+  <!-- React CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px gray;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+    button {
+      background: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function App() {
+
+  const event = {
+    name: "Tech Fest 2026",
+    department: "Computer Science",
+    date: "10 May 2026",
+    time: "10:00 AM",
+    venue: "Auditorium",
+    price: 100,
+    available: 50
+  };
+
+  const [available, setAvailable] = React.useState(event.available);
+  const [form, setForm] = React.useState({
+    name: "",
+    email: "",
+    dept: "",
+    tickets: ""
+  });
+
+  const [msg, setMsg] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
+  const bookTicket = () => {
+
+    setError("");
+    setMsg("");
+
+    if (!form.name || !form.email || !form.dept || !form.tickets) {
+      setError("All fields are required!");
+      return;
+    }
+
+    if (!validateEmail(form.email)) {
+      setError("Invalid Email ID");
+      return;
+    }
+
+    if (form.tickets <= 0) {
+      setError("Tickets must be positive number");
+      return;
+    }
+
+    if (form.tickets > available) {
+      setError("Not enough tickets available");
+      return;
+    }
+
+    const total = form.tickets * event.price;
+
+    setAvailable(available - form.tickets);
+
+    setMsg(
+      `Booking Successful! 
+      Name: ${form.name}
+      Event: ${event.name}
+      Tickets: ${form.tickets}
+      Total Amount: ₹${total}`
+    );
+
+    // EMAIL NOTIFICATION (EmailJS)
+    emailjs.init("abc123XYZpublickey");
+ // replace later
+
+    emailjs.send("service_9k2abc1", ...)
+emailjs.send(..., "template_x7h2k9", ...)
+, {
+      user_name: form.name,
+      user_email: form.email,
+      event_name: event.name,
+      tickets: form.tickets,
+      total: total
+    });
+
+  };
+
+  return (
+    <div className="container">
+
+      <h2>Event Details</h2>
+      <p><b>Name:</b> {event.name}</p>
+      <p><b>Department:</b> {event.department}</p>
+      <p><b>Date:</b> {event.date}</p>
+      <p><b>Time:</b> {event.time}</p>
+      <p><b>Venue:</b> {event.venue}</p>
+      <p><b>Price:</b> ₹{event.price}</p>
+      <p><b>Available:</b> {available}</p>
+
+      <hr/>
+
+      <h2>Book Ticket</h2>
+
+      <input name="name" placeholder="Name" onChange={handleChange} />
+      <input name="email" placeholder="Email" onChange={handleChange} />
+      <input name="dept" placeholder="Department" onChange={handleChange} />
+      <input name="tickets" type="number" placeholder="No. of Tickets" onChange={handleChange} />
+
+      <button onClick={bookTicket}>Book Now</button>
+
+      {error && <p className="error">{error}</p>}
+      {msg && <pre className="success">{msg}</pre>}
+
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+
+</body>
+</html>
